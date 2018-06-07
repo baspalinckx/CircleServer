@@ -1,6 +1,7 @@
 const express = require('express');
 const routes = express.Router();
 const bcrypt = require('bcrypt');
+const sha256 = require('sha256');
 
 routes.get('/login', function(req, res) {
     res.status(400);
@@ -12,19 +13,12 @@ routes.get('/login', function(req, res) {
 routes.post('/register', function(req, res) {
     const body = req.body;
 
-    if(body.email && body.name && body.password){
-        console.log(body.email);
-        console.log(body.firstName);
-        console.log(body.lastName);
-        console.log(body.password);
-
-        bcrypt.genSalt(10).then((salt) => {
-            bcrypt.hash(body.password, salt).then((hashedPass) => {
-                console.log(hashedPass);
-                res.status(400).json({
-                    'hash': hashedPass,
-                    'salt': salt
-                })
+    if(body.email && body.lastName && body.firstName && body.password){
+        bcrypt.genSalt(5).then((salt) => {
+            let hashedPass = sha256(salt + body.password);
+            res.status(400).json({
+                'hash': hashedPass,
+                'salt': salt
             })
         })
     }
