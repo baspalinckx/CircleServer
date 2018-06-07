@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
     email: {
-        type: Schema,
+        type: String,
         required: true
     },
     firstName:{
@@ -17,9 +17,13 @@ const UserSchema = new Schema({
     salt:{
         type: String,
         required: true
-    }
+    },
     password:{
         type: String,
+        required: true
+    },
+    transparent:{
+        type: Boolean,
         required: true
     }
 });
