@@ -4,7 +4,8 @@ let env = {
     dbPort: process.env.DB_PORT || '',
     dbUser: process.env.DB_USER || '',
     dbPassword: process.env.DB_PASSWORD || '',
-    dbDatabase: process.env.DB_DATABASE || 'user'
+    dbDatabase: process.env.DB_DATABASE || 'user',
+    secret: process.env.SECRET || 'YouHaveFailedThisCity'
 };
 
 let dburl = process.env.NODE_ENV === 'production' ?
