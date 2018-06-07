@@ -4,11 +4,36 @@ const bcrypt = require('bcrypt');
 const sha256 = require('sha256');
 const users = require('../model/users');
 
-routes.get('/login', function(req, res) {
-    res.status(400);
-    res.json({
-        'login': 'test'
-    });
+routes.post('/login', function(req, res) {
+    const body = req.body;
+
+    if(body.email && body.password){
+        users.findOne({"email": body.email}).then((user) => {
+            let passHash = sha256(user.salt + body.password);
+            if(passHash === user.password){
+                res.status(200).json({
+                    'status': true
+                })
+            }
+            else {
+                res.status(400).json({
+                    'status': false,
+                    'result': "password isn't right"
+                })
+            }
+        }).catch(() => {
+            res.status(400).json({
+                'status': false,
+                'result': "user not found"
+            })
+        })
+    }
+    else {
+        res.status(400).json({
+            'status': false,
+            'result': "no credentials given"
+        })
+    }
 });
 
 routes.post('/register', function(req, res) {
