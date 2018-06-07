@@ -26,20 +26,28 @@ routes.post('/register', function(req, res) {
                 'password': hashedPass,
                 'transparent': body.transparent
             };
-            console.log(userProps);
 
             users.create(userProps)
-                .then((users) => {
-                    res.status(200).send(users)
+                .then((user) => {
+                    res.status(200).json({
+                        "status": true,
+                        "result": user
+                    })
                 })
-                .catch((error) => res.status(400).json(error))
+                .catch((error) => {
+                    console.log(error);
+                    res.status(400).json({
+                        "status": false,
+                        "result": error
+                    });
+                });
         });
     }
     else {
-        res.status(400);
-        res.json({
-            'login': 'test'
-        });
+        res.status(400).json({
+            "status": false,
+            "result": "Credentials arn't given, the required parameters are: email, firstName, lastName, password, transparent"
+        })
     }
 
 });
