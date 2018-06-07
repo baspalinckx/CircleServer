@@ -1,16 +1,13 @@
 let http = require('http');
 let createError = require('http-errors');
 let express = require ('express');
-let config = require('./config/config');
+let config = require('./config/env/env');
 let loginRouter = require('./routes/login');
 
 let app = express();
 
 app.use('/login', loginRouter);
 
-// app.use(function(req, res, next) {
-//    next(createError(404));
-//});
 
 app.use('*', function(req, res){
   res.status(400);
