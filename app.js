@@ -1,16 +1,32 @@
 let http = require('http');
 let createError = require('http-errors');
 let express = require ('express');
+let bodyParser = require('body-parser');
 let config = require('./config/config');
-let loginRouter = require('./routes/login');
+let loginRouter = require('./routes/user');
+
 
 let app = express();
 
-app.use('/login', loginRouter);
+app.use(bodyParser.urlencoded({
+    'extended': 'true'
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.json({
+    type: 'application/vnd.api+json'
+}));
 
-// app.use(function(req, res, next) {
-//    next(createError(404));
-//});
+app.use('/user', loginRouter);
+
+
+
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', process.env.ALLOW_ORIGIN || 'http://localhost:4200');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 app.use('*', function(req, res){
   res.status(400);
