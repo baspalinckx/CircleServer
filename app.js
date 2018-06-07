@@ -2,11 +2,8 @@ let http = require('http');
 let createError = require('http-errors');
 let express = require ('express');
 let bodyParser = require('body-parser');
-let config = require('./config/config');
 let loginRouter = require('./routes/user');
-
 let config = require('./config/env/env');
-let loginRouter = require('./routes/login');
 
 let app = express();
 
@@ -19,7 +16,6 @@ app.use(bodyParser.json({
 }));
 
 app.use('/user', loginRouter);
-
 
 
 app.use(function (req, res, next) {
