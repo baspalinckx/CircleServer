@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express();
+const express = require('express');
+const routes = express.Router();
+// const router = express();
 
-router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express'});
+routes.get('/', function(req, res) {
+    res.status(400);
+    res.json({
+        'login': 'test'
 
+    });
 });
 
-module.express = router;
+module.exports = routes;
