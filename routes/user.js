@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const sha256 = require('sha256');
 const users = require('../model/users');
 const config = require('../config/env/env');
-const jwt = require('express-jwt');
+const jwt = require('jsonwebtoken');
 
 routes.post('/login', function(req, res) {
     const body = req.body;
@@ -17,11 +17,12 @@ routes.post('/login', function(req, res) {
 
                     const payload = {
                         transparent: user.transparent,
-                        name: user.firstName + " " + user.lastName
+                        name: user.firstName + " " + user.lastName,
+                        id: user._id
                     };
 
                     let token = jwt.sign(payload, config.env.secret, {
-                        expiresInMinutes: 14400
+                        expiresIn: 14400
                     });
 
                     res.status(200).json({
