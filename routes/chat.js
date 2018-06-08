@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
 
 
 server.listen(port, () => {
-    console.log(`started on port: ${port}`);
+    console.log(`Chat server running fine on: ${port}`);
 });
 
 module.exports = routes;
