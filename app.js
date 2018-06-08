@@ -1,16 +1,41 @@
-let http = require('http');
-let createError = require('http-errors');
 let express = require ('express');
-let config = require('./config/config');
-let loginRouter = require('./routes/login');
+let bodyParser = require('body-parser');
+let loginRouter = require('./routes/user');
+let config = require('./config/env/env');
+let mongodb = require('./config/mongodb');
+let jwt = require('express-jwt');
 
 let app = express();
 
-app.use('/login', loginRouter);
+app.use(bodyParser.urlencoded({
+    'extended': 'true'
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.json({
+    type: 'application/vnd.api+json'
+}));
 
-// app.use(function(req, res, next) {
-//    next(createError(404));
-//});
+app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register']}));
+
+
+app.use('/user', loginRouter);
+
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).json({
+            'status': false,
+            'result': "Token is invalid"
+
+        });
+    }
+});
 
 app.use('*', function(req, res){
   res.status(400);
