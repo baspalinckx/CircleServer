@@ -27,7 +27,15 @@ routes.post('/login', function(req, res) {
 
                     res.status(200).json({
                         'status': true,
-                        'result': token
+                        'result': {
+                            'token': token,
+                            'user': {
+                                'email': user.email,
+                                'firstname': user.firstName,
+                                'lastname': user.lastName,
+                                'transparent': user.transparent
+                            }
+                        }
                     })
                 }
                 else {
