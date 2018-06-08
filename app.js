@@ -5,6 +5,19 @@ let streamRoute = require('./routes/stream');
 let config = require('./config/env/env');
 let mongodb = require('./config/mongodb');
 let jwt = require('express-jwt');
+const NodeMediaServer = require('node-media-server');
+
+const configStream = {
+    logType: 3,
+    rtmp: {
+        port: 1935,
+        chunk_size: 6000,
+        gop_cache: true,
+        ping: 60,
+        ping_timeout: 30
+    }
+};
+
 
 let app = express();
 
@@ -49,5 +62,9 @@ app.use('*', function(req, res){
 app.listen(config.env.webPort, function () {
   console.log('The server listens: ' + config.env.webPort)
 });
+
+var nms = new NodeMediaServer(configStream);
+nms.run();
+
 
 module.exports = app;

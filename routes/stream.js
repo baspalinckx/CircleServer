@@ -1,8 +1,8 @@
-const NodeMediaServer = require('node-media-server');
+/*const NodeMediaServer = require('node-media-server');*/
 const express = require('express');
 const routes = express.Router();
 
-const config = {
+/*const config = {
     logType: 3,
     rtmp: {
         port: 1935,
@@ -11,10 +11,8 @@ const config = {
         ping: 60,
         ping_timeout: 30
     }
-
 };
 var nms = new NodeMediaServer(config);
-
 
 routes.post('', function(req, res) {
     console.log('test');
@@ -22,6 +20,6 @@ routes.post('', function(req, res) {
   res.status(200).json({
       "test": "test"
   })
-});
+});*/
 
 module.exports = routes;
