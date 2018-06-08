@@ -10,5 +10,12 @@ required body: {
 
 response: {
   "status": true/false
-  "result": token / error
+  "result": error / {
+    "token": token,
+    "user": {
+      "email": email,
+      "firstname": firstname,
+      "lastname": lastname
+    }
+  }
 }
