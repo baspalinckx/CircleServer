@@ -1,41 +1,51 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+let express = require ('express');
+let bodyParser = require('body-parser');
+let loginRouter = require('./routes/user');
+let config = require('./config/env/env');
+let mongodb = require('./config/mongodb');
+let jwt = require('express-jwt');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+let app = express();
 
-var app = express();
+app.use(bodyParser.urlencoded({
+    'extended': 'true'
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.json({
+    type: 'application/vnd.api+json'
+}));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login']}));
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', loginRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).json({
+            'status': false,
+            'result': "Token is invalid"
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+        });
+    }
+});
+
+app.use('*', function(req, res){
+  res.status(400);
+  res.json({
+      'error': 'Deze URL is niet beschikbaar'
+  })
+});
+
+app.listen(config.env.webPort, function () {
+  console.log('The server listens: ' + config.env.webPort)
 });
 
 module.exports = app;
