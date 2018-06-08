@@ -16,7 +16,8 @@ routes.post('/start', function(req, res) {
         "status": true,
         "result": {
             "url": "rtmp://localhost/live",
-            "secretKey": randomNumber
+            "secretKey": randomNumber,
+            "deprecated": 'Deze endpoint is niet meer nodig, deze informatie krijg je nu gewoon bij het inloggen met een transparent account'
         }
     });
 });
@@ -29,7 +30,12 @@ routes.get('/list', function (req, res) {
 
             for (let i in streams) {
                 if (streams.hasOwnProperty(i)) {
-                    streamList.push(streams[i].publisher.stream);
+                    let name = streamList[i].publisher.stream;
+                        let streamObj = {
+                        "name": name,
+                        "source": "http://localhost:8000/live/" + name +".flv"
+                    };
+                    streamList.push(streamObj);
                 }
             }
 
