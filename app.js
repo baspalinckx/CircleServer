@@ -5,19 +5,7 @@ let streamRoute = require('./routes/stream');
 let config = require('./config/env/env');
 let mongodb = require('./config/mongodb');
 let jwt = require('express-jwt');
-const NodeMediaServer = require('node-media-server');
-
-const configStream = {
-    logType: 3,
-    rtmp: {
-        port: 1935,
-        chunk_size: 6000,
-        gop_cache: true,
-        ping: 60,
-        ping_timeout: 30
-    }
-};
-
+let mediaServer = require('./mediaServer');
 
 let app = express();
 
@@ -29,7 +17,7 @@ app.use(bodyParser.json({
     type: 'application/vnd.api+json'
 }));
 
-app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login', '/stream']}));
+//app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login', '/stream']}));
 
 
 app.use('/user', loginRouter);
@@ -47,8 +35,10 @@ app.use(function (err, req, res, next) {
         res.status(401).json({
             'status': false,
             'result': "Token is invalid"
-
         });
+    }
+    else {
+        next();
     }
 });
 
@@ -63,8 +53,6 @@ app.listen(config.env.webPort, function () {
   console.log('The server listens: ' + config.env.webPort)
 });
 
-var nms = new NodeMediaServer(configStream);
-nms.run();
-
+mediaServer.start();
 
 module.exports = app;

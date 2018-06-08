@@ -1,25 +1,18 @@
-/*const NodeMediaServer = require('node-media-server');*/
 const express = require('express');
 const routes = express.Router();
 
-/*const config = {
-    logType: 3,
-    rtmp: {
-        port: 1935,
-        chunk_size: 6000,
-        gop_cache: true,
-        ping: 60,
-        ping_timeout: 30
-    }
-};
-var nms = new NodeMediaServer(config);
+routes.post('/start', function(req, res) {
+    let randomNumber = "" + Math.round(Math.random() * 1000000000);
+    console.log(randomNumber);
 
-routes.post('', function(req, res) {
-    console.log('test');
-  nms.run();
-  res.status(200).json({
-      "test": "test"
-  })
-});*/
+    res.status(200).json({
+        "status": true,
+        "result": {
+            "url": "rtmp://localhost/live",
+            "secretKey": randomNumber
+        }
+    });
+});
+
 
 module.exports = routes;

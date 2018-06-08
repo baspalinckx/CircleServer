@@ -8,11 +8,23 @@ let env = {
     secret: process.env.SECRET || 'YouHaveFailedThisCity'
 };
 
+let configStream = {
+    logType: 3,
+    rtmp: {
+        port: 1935,
+        chunk_size: 6000,
+        gop_cache: true,
+        ping: 60,
+        ping_timeout: 30
+    }
+};
+
 let dburl = process.env.NODE_ENV === 'production' ?
     'mongodb://' + env.dbUser + ':' + env.dbPassword + '@' + env.dbHost + ':' + env.dbPort + '/' + env.dbDatabase :
     'mongodb://localhost/' + env.dbDatabase;
 
 module.exports = {
     env: env,
-    dbURL: dburl
+    dbURL: dburl,
+    configStream: configStream
 };
