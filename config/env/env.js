@@ -17,7 +17,7 @@ let configStream = {
         ping: 60,
         ping_timeout: 30
     },
-    http: {
+    http:{
         port: 8000,
         allow_origin: '*'
     }
