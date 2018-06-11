@@ -20,6 +20,17 @@ let configStream = {
     http:{
         port: 8000,
         allow_origin: '*'
+    },
+    trans: {
+        ffmpeg: '/user/local/bin/ffmpeg',
+        task: [
+            {
+                app: 'vod',
+                ac: 'aac',
+                mp4: true,
+                mp4Flag: '[movflags=faststart]'
+            }
+        ]
     }
 };
 
