@@ -20,8 +20,8 @@ let configStream = {
     http:{
         port: 8000,
         allow_origin: '*'
-    },
-    trans: {
+    }
+    /*trans: {
         ffmpeg: './config/ffmpeg2',
         tasks: [
             {
@@ -36,7 +36,7 @@ let configStream = {
                 mp4Flags: '[movflags=faststart]'
             }
         ]
-    }
+    }*/
 
 };
 

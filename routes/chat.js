@@ -1,3 +1,4 @@
+/*
 const express = require('express')
 const app = express();
 const routes = express.Router();
@@ -25,4 +26,4 @@ server.listen(port, () => {
     console.log(`Chat server running fine on: ${port}`);
 });
 
-module.exports = routes;
+module.exports = routes;*/
