@@ -20,6 +20,11 @@ let configStream = {
     http:{
         port: 8000,
         allow_origin: '*'
+    },
+    https:{
+        port: 8443,
+        key: './privatekey.pem',
+        cert: './certificate.pem'
     }
     /*trans: {
         ffmpeg: './config/ffmpeg2',
