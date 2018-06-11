@@ -1,6 +1,7 @@
 let express = require ('express');
 let bodyParser = require('body-parser');
 let loginRouter = require('./routes/user');
+let chatRouter = require('./routes/chat');
 let config = require('./config/env/env');
 let mongodb = require('./config/mongodb');
 let jwt = require('express-jwt');
@@ -19,6 +20,7 @@ app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/use
 
 
 app.use('/user', loginRouter);
+app.use('/', chatRouter);
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
