@@ -1,10 +1,12 @@
 let express = require ('express');
 let bodyParser = require('body-parser');
 let loginRouter = require('./routes/user');
+let streamRoute = require('./routes/stream');
 let chatRouter = require('./routes/chat');
 let config = require('./config/env/env');
 let mongodb = require('./config/mongodb');
 let jwt = require('express-jwt');
+let mediaServer = require('./mediaServer');
 
 let app = express();
 
@@ -16,11 +18,12 @@ app.use(bodyParser.json({
     type: 'application/vnd.api+json'
 }));
 
-app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login']}));
+app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login', '/stream']}));
 
 
 app.use('/user', loginRouter);
 app.use('/', chatRouter);
+app.use('/stream', streamRoute);
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -37,6 +40,9 @@ app.use(function (err, req, res, next) {
 
         });
     }
+    else {
+        next();
+    }
 });
 
 app.use('*', function(req, res){
@@ -49,5 +55,9 @@ app.use('*', function(req, res){
 app.listen(config.env.webPort, function () {
   console.log('The server listens: ' + config.env.webPort)
 });
+
+mediaServer.start();
+
+
 
 module.exports = app;

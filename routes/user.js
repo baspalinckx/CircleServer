@@ -25,18 +25,26 @@ routes.post('/login', function(req, res) {
                         expiresIn: 14400
                     });
 
-                    res.status(200).json({
-                        'status': true,
-                        'result': {
-                            'token': token,
-                            'user': {
-                                'email': user.email,
-                                'firstname': user.firstName,
-                                'lastname': user.lastName,
-                                'transparent': user.transparent
+                    let response;
+
+                    if(user.transparent && body.transparent){
+                        let sessionid = sha256('' + Math.random() * 10000000000);
+                        response = {
+                            'status': true,
+                            'result': {
+                                'token': token,
+                                'streamUrl': 'rtmp://localhost/live/' + sessionid
                             }
                         }
-                    })
+                    }
+                    else {
+                        response = {
+                            'status': true,
+                            'result': token
+                        }
+                    }
+
+                    res.status(200).json(response);
                 }
                 else {
                     res.status(400).json({
