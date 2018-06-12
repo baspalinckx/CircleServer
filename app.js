@@ -18,7 +18,9 @@ app.use(bodyParser.json({
     type: 'application/vnd.api+json'
 }));
 
-app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login', '/user/salt', '/stream']}));
+app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login', '/user/salt', '/user/test', '/stream']}));
+
+
 
 
 app.use('/user', loginRouter);

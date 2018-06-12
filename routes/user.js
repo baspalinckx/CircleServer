@@ -6,6 +6,12 @@ const users = require('../model/users');
 const config = require('../config/env/env');
 const jwt = require('jsonwebtoken');
 
+routes.get('/test', function (req, res) {
+    res.status(200).json({
+        "status": true
+    })
+});
+
 routes.post('/salt', function (req, res) {
     const body = req.body;
 
