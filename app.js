@@ -2,7 +2,7 @@ let express = require ('express');
 let bodyParser = require('body-parser');
 let loginRouter = require('./routes/user');
 let streamRoute = require('./routes/stream');
-let chatRouter = require('./routes/chat');
+//let chatRouter = require('./routes/chat');
 let config = require('./config/env/env');
 let mongodb = require('./config/mongodb');
 let jwt = require('express-jwt');
@@ -20,11 +20,8 @@ app.use(bodyParser.json({
 
 app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login', '/user/salt', '/user/test', '/stream']}));
 
-
-
-
 app.use('/user', loginRouter);
-app.use('/', chatRouter);
+//app.use('/', chatRouter);
 app.use('/stream', streamRoute);
 
 app.use(function (req, res, next) {
@@ -59,7 +56,5 @@ app.listen(config.env.webPort, function () {
 });
 
 mediaServer.start();
-
-
 
 module.exports = app;
