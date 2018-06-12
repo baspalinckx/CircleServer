@@ -25,9 +25,9 @@ let configStream = {
         port: 8443,
         key: './privatekey.pem',
         cert: './certificate.pem'
-    }
-    /*trans: {
-        ffmpeg: './config/ffmpeg2',
+    },
+    trans: {
+        ffmpeg: './config/ffmpeg.exe',
         tasks: [
             {
                 port: 5000,
@@ -35,13 +35,13 @@ let configStream = {
                 ac: 'aac',
                 hls: true,
                 hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
-                dash: true,
-                dashFlags: '[f=dash:window_size=3:extra_window_size=5]',
+                /*dash: true,
+                dashFlags: '[f=dash:window_size=3:extra_window_size=5]',*/
                 mp4: true,
                 mp4Flags: '[movflags=faststart]'
             }
         ]
-    }*/
+    }
 
 };
 
