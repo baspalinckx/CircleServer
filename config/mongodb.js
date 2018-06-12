@@ -4,6 +4,8 @@ const config = require('./env/env');
 
 mongoose.Promise = global.Promise;
 
+console.log(config.dbURL);
+
 mongoose.connect(config.dbURL);
 let connection = mongoose.connection
     .once('open', () => console.log('Connected to Mongo on ' + config.dbURL))

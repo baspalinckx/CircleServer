@@ -22,7 +22,7 @@ app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/use
 
 
 app.use('/user', loginRouter);
-app.use('/', chatRouter);
+//app.use('/', chatRouter);
 app.use('/stream', streamRoute);
 
 app.use(function (req, res, next) {
