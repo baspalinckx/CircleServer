@@ -27,7 +27,7 @@ let configStream = {
         cert: './certificate.pem'
     },
     trans: {
-        ffmpeg: './config/ffmpeg.exe',
+        ffmpeg: 'ffmpeg_3.4.2.orig.tar.xz' /*'./config/ffmpeg.exe'*/,
         tasks: [
             {
                /* port: 5000,*/
