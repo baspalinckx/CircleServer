@@ -1,10 +1,23 @@
 API endpoints:
 
+POST /user/salt
+
+required body: {
+    "email": email
+}
+
+response: {
+    "status": true/false,
+    "result": {
+        "salt": salt
+    }
+}
+
 POST /user/login
 
 required body: {
   "email": email
-  "password": password
+  "hash": sha256Hash(salt+password)
   "transparent": true/false (true for android app, false for angular site)
 }
 
