@@ -27,7 +27,7 @@ let configStream = {
         cert: './certificate.pem'
     },
     trans: {
-        ffmpeg: '/usr/local/bin/ffmpeg' /*'./config/ffmpeg.exe'*/,
+        ffmpeg: '/ffmpegMap/ffmpeg-git/20180610-64bit-static/ffmpeg' /*'./config/ffmpeg.exe'*/,
         tasks: [
             {
                /* port: 5000,*/
