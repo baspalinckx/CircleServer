@@ -6,13 +6,39 @@ const users = require('../model/users');
 const config = require('../config/env/env');
 const jwt = require('jsonwebtoken');
 
+routes.post('/salt', function (req, res) {
+    const body = req.body;
+
+    if(body.email){
+        users.findOne({"email": body.email}).then((user) => {
+            res.status(200).json({
+                "status": true,
+                "result": {
+                    "email": body.email,
+                    "salt": user.salt
+                }
+            })
+        }).catch((err) => {
+            res.status(400).json({
+                "status": false,
+                "result": "User does not exist"
+            })
+        })
+    }
+    else {
+        res.status(400).json({
+            "status": false,
+            "result": "no email given"
+        })
+    }
+});
+
 routes.post('/login', function(req, res) {
     const body = req.body;
 
-    if(body.email && body.password && body.transparent !== null){
+    if(body.email && body.hash && body.transparent !== null){
         users.findOne({"email": body.email}).then((user) => {
-            let passHash = sha256(user.salt + body.password);
-            if(passHash === user.password){
+            if(body.hash.toLowerCase() === user.password){
                 if(user.transparent === body.transparent || body.transparent === false){
 
                     const payload = {
