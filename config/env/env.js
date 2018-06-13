@@ -12,6 +12,8 @@ const ffmpegSrc = process.platform=== 'win32'?
     './config/ffmpeg.exe':
     '../../../usr/bin/ffmpeg';
 
+console.log(ffmpegSrc);
+
 
 let configStream = {
     logType: 3,
