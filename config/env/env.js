@@ -10,7 +10,7 @@ let env = {
 
 const ffmpegSrc = process.platform=== 'win32'?
     './config/ffmpeg.exe':
-    'home/deploy/CircleServer/node_modules/ffmpeg';
+    './usr/share/ffmpeg';
 
 console.log(ffmpegSrc);
 
