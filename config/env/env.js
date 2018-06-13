@@ -10,7 +10,7 @@ let env = {
 
 const ffmpegSrc = process.platform=== 'win32'?
     './config/ffmpeg.exe':
-    '../../../usr/share/ffmpeg';
+    '../../../usr/bin/ffmpeg';
 
 
 let configStream = {
