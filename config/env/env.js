@@ -10,7 +10,7 @@ let env = {
 
 const ffmpegSrc = process.platform=== 'win32'?
     './config/ffmpeg.exe':
-    '/usr/local/bin/ffmpeg';
+    '/usr/bin/ffmpeg';
 
 console.log(ffmpegSrc);
 
