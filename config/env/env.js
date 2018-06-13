@@ -10,12 +10,12 @@ let env = {
 
 const ffmpegSrc = process.platform=== 'win32'?
     './config/ffmpeg.exe':
-    '../../../usr/bin/ffmpeg';
+    '../../FFmpeg';
 
 console.log(ffmpegSrc);
 
 
-let configStream = {
+const configStream = {
     logType: 3,
     rtmp: {
         port: 1935,
@@ -52,7 +52,7 @@ let configStream = {
 
 };
 
-let dburl = process.env.NODE_ENV === 'production' ?
+const dburl = process.env.NODE_ENV === 'production' ?
     'mongodb://' + env.dbUser + ':' + env.dbPassword + '@' + env.dbHost + ':' + env.dbPort + '/' + env.dbDatabase :
     'mongodb://localhost/' + env.dbDatabase;
 
