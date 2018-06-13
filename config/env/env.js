@@ -8,6 +8,11 @@ let env = {
     secret: process.env.SECRET || 'YouHaveFailedThisCity'
 };
 
+const ffmpegSrc = process.platform=== 'win32'?
+    './config/ffmpeg.exe':
+    '../../../usr/bin/ffmpeg';
+
+
 let configStream = {
     logType: 3,
     rtmp: {
@@ -27,7 +32,7 @@ let configStream = {
         cert: './certificate.pem'
     },
     trans: {
-        ffmpeg: '../../../usr/bin/ffmpeg' /*'./config/ffmpeg.exe'*/,
+        ffmpeg: ffmpegSrc,
         tasks: [
             {
                /* port: 5000,*/
