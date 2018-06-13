@@ -33,7 +33,7 @@ routes.get('/list', function (req, res) {
                     let name = streamList[i].publisher.stream;
                         let streamObj = {
                         "name": name,
-                        "source": "http://localhost:8000/live/" + name +".flv"
+                        "source": "http://localhost:8000/live/" + name +"/index.m3u8"
                     };
                     streamList.push(streamObj);
                 }
