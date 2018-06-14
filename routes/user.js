@@ -9,9 +9,9 @@ const baseURL = 'rtmp://188.166.29.146/live/';
 const keypair = require('keypair');
 const rsa = require('node-rsa');
 
-var crypto = require('crypto'),
-    algorithm = 'aes-256-ctr',
-    password = 'test';
+var crypto = require('crypto');
+
+
 
 
 routes.post('/salt', function (req, res) {
@@ -109,34 +109,29 @@ routes.post('/login', function(req, res) {
     }
 });
 
-routes.post('rsaencrypt', function (req, res) {
+routes.post('/rsaencrypt', function (req, res) {
     const body = req.body;
-    const hashedMessage = sha256(body.email);
+    const verify = crypto.createVerify('SHA256');
+    let keys = keypair();
+    const sign = crypto.createSign('SHA256');
+    sign.update(body.email).end();
+    const signature = sign.sign(keys.private);
+    verify.update(body.email);
+    verify.end();
+    const verified = (verify.verify(keys.public, signature));
+    console.log(verified);
 
-        var cipher = crypto.createCipher('aes-256-cbc', body.privatekey);
-        var crypted = cipher.update(hashedMessage, 'utf-8', 'hex');
-        crypted += cipher.final('hex');
-        res.status(200).json({'Encrytion': crypted});
+
+
+
 });
 
 routes.post('/rsalogin', function (req, res) {
    const body = req.body;
    if(body.email && body.encryptedEmail){
        users.findOne({"email": body.email}).then((user) => {
-            /*let key = new rsa({bits:2048});
-            let key2 = new rsa();
-            key.importKey(user.publickey, 'pkcs1');*/
-           console.log(decrypt(req.body.encryptedEmail, user.publickey));
 
-            function decrypt(text, key) {
-                var decipher = crypto.createDecipher(algorithm, key);
-                var decrypted = decipher.update(text, 'utf8', 'hex');
-                decrypted += decipher.final('hex');
 
-                return decrypted
-            }
-            //console.log(key.decryptPublic(body.encryptedEmail, {result}));
-            //console.log(result);
        })
    }
 });
