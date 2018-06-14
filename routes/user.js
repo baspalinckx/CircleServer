@@ -5,6 +5,7 @@ const sha256 = require('sha256');
 const users = require('../model/users');
 const config = require('../config/env/env');
 const jwt = require('jsonwebtoken');
+const baseURL = 'rtmp://188.166.29.146/live/';
 
 routes.post('/salt', function (req, res) {
     const body = req.body;
@@ -18,7 +19,7 @@ routes.post('/salt', function (req, res) {
                     "salt": user.salt
                 }
             })
-        }).catch((err) => {
+        }).catch(() => {
             res.status(400).json({
                 "status": false,
                 "result": "User does not exist"
@@ -59,7 +60,7 @@ routes.post('/login', function(req, res) {
                             'status': true,
                             'result': {
                                 'token': token,
-                                'streamUrl': 'rtmp://localhost/live/' + sessionid
+                                'streamUrl': baseURL + sessionid
                             }
                         }
                     }
