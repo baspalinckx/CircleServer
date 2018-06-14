@@ -109,9 +109,18 @@ routes.post('/login', function(req, res) {
     }
 });
 
+routes.post('rsaencrypt', function (req, res) {
+    const body = req.body;
+    const hashedMessage = sha256(body.email);
+
+        var cipher = crypto.createCipher('aes-256-cbc', body.privatekey);
+        var crypted = cipher.update(hashedMessage, 'utf-8', 'hex');
+        crypted += cipher.final('hex');
+        res.status(200).json({'Encrytion': crypted});
+});
+
 routes.post('/rsalogin', function (req, res) {
    const body = req.body;
-
    if(body.email && body.encryptedEmail){
        users.findOne({"email": body.email}).then((user) => {
             /*let key = new rsa({bits:2048});
@@ -126,12 +135,8 @@ routes.post('/rsalogin', function (req, res) {
 
                 return decrypted
             }
-
             //console.log(key.decryptPublic(body.encryptedEmail, {result}));
-
             //console.log(result);
-
-
        })
    }
 });
