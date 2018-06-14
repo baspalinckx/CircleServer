@@ -9,6 +9,11 @@ const baseURL = 'rtmp://188.166.29.146/live/';
 const keypair = require('keypair');
 const rsa = require('node-rsa');
 
+var crypto = require('crypto'),
+    algorithm = 'aes-256-ctr',
+    password = 'test';
+
+
 routes.post('/salt', function (req, res) {
     const body = req.body;
 
@@ -109,9 +114,18 @@ routes.post('/rsalogin', function (req, res) {
 
    if(body.email && body.encryptedEmail){
        users.findOne({"email": body.email}).then((user) => {
-            let key = new rsa({bits:2048});
+            /*let key = new rsa({bits:2048});
             let key2 = new rsa();
-            key.importKey(user.publickey, 'pkcs1');
+            key.importKey(user.publickey, 'pkcs1');*/
+           console.log(decrypt(req.body.encryptedEmail, user.publickey));
+
+            function decrypt(text, key) {
+                var decipher = crypto.createDecipher(algorithm, key);
+                var decrypted = decipher.update(text, 'utf8', 'hex');
+                decrypted += decipher.final('hex');
+
+                return decrypted
+            }
 
             //console.log(key.decryptPublic(body.encryptedEmail, {result}));
 
