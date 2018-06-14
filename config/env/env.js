@@ -12,9 +12,6 @@ const ffmpegSrc = process.platform=== 'win32'?
     './config/ffmpeg.exe':
     './config/ffmpeg';
 
-console.log(ffmpegSrc);
-
-
 const configStream = {
     logType: 3,
     rtmp: {

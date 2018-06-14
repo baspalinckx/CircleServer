@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
 const config = require('./env/env');
 
-
 mongoose.Promise = global.Promise;
-
-console.log(config.dbURL);
 
 mongoose.connect(config.dbURL);
 let connection = mongoose.connection

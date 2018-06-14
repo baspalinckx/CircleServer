@@ -26,13 +26,11 @@ app.use(bodyParser.json({
     type: 'application/vnd.api+json'
 }));
 
-app.use(jwt({ secret: config.env.secret}).unless({path: ['/user/register', '/user/login', '/user/salt', '/stream']}));
-
+app.use(jwt({ secret: config.env.secret}).unless({path: ['/stream/list', '/user/register', '/user/login', '/user/salt', '/stream']}));
 
 app.use('/user', loginRouter);
 //app.use('/', chatRouter);
 app.use('/stream', streamRoute);
-
 
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
@@ -59,7 +57,5 @@ app.listen(config.env.webPort, function () {
 });
 
 mediaServer.start();
-
-
 
 module.exports = app;
