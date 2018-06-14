@@ -8,7 +8,14 @@ let env = {
     secret: process.env.SECRET || 'YouHaveFailedThisCity'
 };
 
-let configStream = {
+const ffmpegSrc = process.platform=== 'win32'?
+    './config/ffmpeg.exe':
+    './config/ffmpeg';
+
+console.log(ffmpegSrc);
+
+
+const configStream = {
     logType: 3,
     rtmp: {
         port: 1935,
@@ -27,7 +34,7 @@ let configStream = {
         cert: './certificate.pem'
     },
     trans: {
-        ffmpeg: './config/ffmpeg.exe',
+        ffmpeg: ffmpegSrc,
         tasks: [
             {
                /* port: 5000,*/
@@ -45,7 +52,7 @@ let configStream = {
 
 };
 
-let dburl = process.env.NODE_ENV === 'production' ?
+const dburl = process.env.NODE_ENV === 'production' ?
     'mongodb://' + env.dbUser + ':' + env.dbPassword + '@' + env.dbHost + ':' + env.dbPort + '/' + env.dbDatabase :
     'mongodb://localhost/' + env.dbDatabase;
 
