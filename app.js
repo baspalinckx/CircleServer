@@ -5,7 +5,7 @@ let streamRoute = require('./routes/stream');
 let chatRouter = require('./routes/chat');
 let config = require('./config/env/env');
 let mongodb = require('./config/mongodb');
-let jwt = require('express-jwt');
+//let jwt = require('express-jwt');
 let mediaServer = require('./mediaServer');
 
 let app = express();
@@ -26,7 +26,7 @@ app.use(bodyParser.json({
     type: 'application/vnd.api+json'
 }));
 
-app.use(jwt({ secret: config.env.secret}).unless({path: ['/stream/list', '/user/register', '/user/login', '/user/salt', '/stream']}));
+//app.use(jwt({ secret: config.env.secret}).unless({path: ['/stream/list', '/user/register', '/user/login', '/user/salt', '/stream']}));
 
 app.use('/user', loginRouter);
 //app.use('/', chatRouter);

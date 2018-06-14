@@ -4,7 +4,7 @@ let env = {
     dbPort: process.env.DB_PORT || '',
     dbUser: process.env.DB_USER || '',
     dbPassword: process.env.DB_PASSWORD || '',
-    dbDatabase: process.env.DB_DATABASE || 'user',
+    dbDatabase: process.env.DB_DATABASE || 'truyouuser',
     secret: process.env.SECRET || 'YouHaveFailedThisCity'
 };
 
@@ -34,7 +34,6 @@ const configStream = {
         ffmpeg: ffmpegSrc,
         tasks: [
             {
-               /* port: 5000,*/
                 app: 'live',
                 ac: 'aac',
                 hls: true,
