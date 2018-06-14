@@ -7,7 +7,7 @@ const config = require('../config/env/env');
 const jwt = require('jsonwebtoken');
 const baseURL = 'rtmp://188.166.29.146/live/';
 const keypair = require('keypair');
-
+const rsa = require('node-rsa');
 
 routes.post('/salt', function (req, res) {
     const body = req.body;
@@ -102,6 +102,24 @@ routes.post('/login', function(req, res) {
             'result': "no credentials given"
         })
     }
+});
+
+routes.post('/rsalogin', function (req, res) {
+   const body = req.body;
+
+   if(body.email && body.encryptedEmail){
+       users.findOne({"email": body.email}).then((user) => {
+            let key = new rsa({bits:2048});
+            let key2 = new rsa();
+            key.importKey(user.publickey, 'pkcs1');
+
+            //console.log(key.decryptPublic(body.encryptedEmail, {result}));
+
+            //console.log(result);
+
+
+       })
+   }
 });
 
 routes.post('/register', function (req, res) {
