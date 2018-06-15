@@ -219,7 +219,7 @@ routes.post('/register', function (req, res) {
     else {
         res.status(400).json({
             "status": false,
-            "result": "Credentials arn't given, the required parameters are: email, firstName, lastName, password, transparent"
+            "result": "Credentials aren't given, the required parameters are: email, firstName, lastName, password, transparent"
         })
     }
 });
