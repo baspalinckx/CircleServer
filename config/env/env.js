@@ -8,11 +8,53 @@ let env = {
     secret: process.env.SECRET || 'YouHaveFailedThisCity'
 };
 
-let dburl = process.env.NODE_ENV === 'production' ?
+const ffmpegSrc = process.platform=== 'win32'?
+    './config/ffmpeg.exe':
+    './config/ffmpeg';
+
+const configStream = {
+    logType: 3,
+    rtmp: {
+        port: 1935,
+        chunk_size: 60000,
+        gop_cache: true,
+        ping: 60,
+        ping_timeout: 30
+    },
+    http:{
+        port: 8000,
+        allow_origin: '*'
+    },
+    https:{
+        port: 8443,
+        key: './privatekey.pem',
+        cert: './certificate.pem'
+    },
+    trans: {
+        ffmpeg: ffmpegSrc,
+        tasks: [
+            {
+               /* port: 5000,*/
+                app: 'live',
+                ac: 'aac',
+                hls: true,
+                hlsFlags: '[hls_time=2:hls_list_size=5:hls_flags=delete_segments]',
+                /*dash: true,
+                dashFlags: '[f=dash:window_size=3:extra_window_size=5]',*/
+                /*mp4: true,
+                mp4Flags: '[movflags=faststart]'*/
+            }
+        ]
+    }
+
+};
+
+const dburl = process.env.NODE_ENV === 'production' ?
     'mongodb://' + env.dbUser + ':' + env.dbPassword + '@' + env.dbHost + ':' + env.dbPort + '/' + env.dbDatabase :
     'mongodb://localhost/' + env.dbDatabase;
 
 module.exports = {
     env: env,
-    dbURL: dburl
+    dbURL: dburl,
+    configStream: configStream
 };
