@@ -6,13 +6,18 @@ const privatePem = fs.readFileSync('./privatekey.pem', 'utf8');
 module.exports = {
     verifySignature: function (email, body, signature) {
         return new Promise(function (resolve, reject) {
-            users.findOne({"email": email}).then((user) => {
-                const verify = crypto.createVerify('SHA256');
-                verify.update(body).end();
-                resolve(verify.verify(user.publickey, signature, 'hex'));
-            }).catch((err) => {
-                reject(err);
-            })
+            if(!email || !body || !signature){
+                reject("no email / body / signature is given")
+            }
+            else {
+                users.findOne({"email": email}).then((user) => {
+                    const verify = crypto.createVerify('SHA256');
+                    verify.update(body).end();
+                    resolve(verify.verify(user.publickey, signature, 'hex'));
+                }).catch((err) => {
+                    reject(err);
+                })
+            }
         })
     },
     signSignature: function (body, privatekey = privatePem) {
