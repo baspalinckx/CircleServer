@@ -1,21 +1,17 @@
 API endpoints:
 
-POST /user/login
+POST /user/rsalogin
 
 required body: {
   "email": email
-  "password": password
+  "signature": signature (singature van de hash van de email geencrypt met je private key)
   "transparent": true/false (true for android app, false for angular site)
 }
+
 
 response: {
   "status": true/false
   "result": error / {
-    "token": token,
-    "user": {
-      "email": email,
-      "firstname": firstname,
-      "lastname": lastname
-    }
+        "streamingurl": streamingURL
   }
 }

@@ -25,6 +25,10 @@ const UserSchema = new Schema({
     transparent:{
         type: Boolean,
         required: true
+    },
+    publickey:{
+        type: String,
+        required: true
     }
 });
 

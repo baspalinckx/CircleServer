@@ -19,7 +19,7 @@ routes.get('/list', function (req, res) {
                     let name = streams[i].publisher.stream;
                         let streamObj = {
                         "name": name,
-                        "source": "http://188.166.29.146:8000/live/" + name +"/index.m3u8"
+                        "source": "http://localhost:8000/live/" + name +"/index.m3u8"
                     };
                     streamList.push(streamObj);
                 }
