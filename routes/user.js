@@ -6,8 +6,54 @@ const users = require('../model/users');
 const config = require('../config/env/env');
 const jwt = require('jsonwebtoken');
 const baseURL = 'rtmp://188.166.29.146/live/';
+const keypair = require('keypair');
 
 const generateSignature = require('../signature');
+
+routes.post('/register', function (req, res) {
+    let pair = keypair();
+    const body = req.body;
+
+    if(body.email && body.firstName && body.lastName  && body.password && body.transparent !== null){
+        bcrypt.genSalt(5).then((salt) => {
+            let hashedPass = sha256(salt + body.password);
+
+            const userProps = {
+                'email': body.email,
+                'firstName': body.firstName,
+                'lastName': body.lastName,
+                'salt': salt,
+                'password': hashedPass,
+                'transparent': body.transparent,
+                'publickey': pair.public
+            };
+
+            users.create(userProps)
+                .then((user) => {
+                    res.status(200).json({
+                        "status": true,
+                        "result": {
+                            "user": user,
+                            "privatekey": pair.private
+                        }
+                    })
+                })
+                .catch((error) => {
+                    console.log(error);
+                    res.status(400).json({
+                        "status": false,
+                        "result": error
+                    });
+                });
+        });
+    }
+    else {
+        res.status(400).json({
+            "status": false,
+            "result": "Credentials aren't given, the required parameters are: email, firstName, lastName, password, transparent"
+        })
+    }
+});
 
 routes.post('/salt', function (req, res) {
     const body = req.body;
@@ -179,49 +225,5 @@ routes.post('/rsalogin', function (req, res) {
    }
 });
 
-routes.post('/register', function (req, res) {
-    let pair = keypair();
-    const body = req.body;
-
-    if(body.email && body.firstName && body.lastName  && body.password && body.transparent !== null){
-        bcrypt.genSalt(5).then((salt) => {
-            let hashedPass = sha256(salt + body.password);
-
-            const userProps = {
-                'email': body.email,
-                'firstName': body.firstName,
-                'lastName': body.lastName,
-                'salt': salt,
-                'password': hashedPass,
-                'transparent': body.transparent,
-                'publickey': pair.public
-            };
-
-            users.create(userProps)
-                .then((user) => {
-                    res.status(200).json({
-                        "status": true,
-                        "result": {
-                            "user": user,
-                            "privatekey": pair.private
-                        }
-                    })
-                })
-                .catch((error) => {
-                    console.log(error);
-                    res.status(400).json({
-                        "status": false,
-                        "result": error
-                    });
-                });
-        });
-    }
-    else {
-        res.status(400).json({
-            "status": false,
-            "result": "Credentials aren't given, the required parameters are: email, firstName, lastName, password, transparent"
-        })
-    }
-});
 
 module.exports = routes;
