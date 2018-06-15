@@ -60,9 +60,7 @@ routes.get('/stats/:streamid', function (req, res) {
                 let viewerscount = stats.subscribers.length;
                 res.status(200).json({
                     "status": true,
-                    "result": {
-                        "viewercount": viewerscount
-                    }
+                    "result": viewerscount
                 })
             }
             else {
