@@ -8,6 +8,7 @@ required body: {
   "transparent": true/false (true for android app, false for angular site)
 }
 
+
 response: {
   "status": true/false
   "result": error / {
