@@ -27,8 +27,20 @@ routes.get('/list', function (req, res) {
                 if (streams.hasOwnProperty(i)) {
                     let name = streams[i].publisher.stream;
                     let promise = users.findOne({"email": name}).then((user) => {
+                        if(user) {
+                            streamList.push({
+                                "name": user.firstName + ' ' + user.lastName,
+                                "source": baseURL + name + "/index.m3u8"
+                            })
+                        }else {
+                            streamList.push({
+                                "name": name,
+                                "source": baseURL + name + "/index.m3u8"
+                            })
+                        }
+                    }).catch(() => {
                         streamList.push({
-                            "name": user.firstName + ' ' + user.lastName,
+                            "name": name,
                             "source": baseURL + name + "/index.m3u8"
                         })
                     });

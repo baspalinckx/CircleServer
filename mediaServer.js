@@ -2,6 +2,7 @@ const NodeMediaServer = require('node-media-server');
 const Signature = require('./signature');
 let config = require('./config/env/env');
 const users = require('./model/users');
+const userHistory = require('./model/userHistory');
 
 function startMediaServer() {
     let nms = new NodeMediaServer(config.configStream);
@@ -11,27 +12,90 @@ function startMediaServer() {
         let email = StreamPath.replace('/live/', '');
         let session = nms.getSession(id);
 
-        console.log(email);
-        console.log(args.signature);
-
         users.findOne({"email": email}).then((user) => {
-           if(user.transparent){
-               Signature.verifySignature(email, email, args.signature).then((res) => {
-                   if(!res){
-                       session.reject();
-                   }
-               }).catch((err) => {
-                   session.reject();
-                   console.log(err);
-               })
-           }else {
-               session.reject();
-           }
-        }).catch((res) => {
-            session.reject();
+            if(!user){
+                //session.reject();
+            }
+            else {
+                if (user.transparent) {
+                    if (args.signature) {
+                        Signature.verifySignature(email, email, args.signature).then((res) => {
+                            if (!res) {
+                                session.reject();
+                            }
+                        }).catch(() => {
+                            session.reject();
+                        })
+                    }
+                    else {
+                        //session.reject();
+                    }
+                } else {
+                    session.reject();
+                }
+            }
+        }).catch(() => {
+             session.reject();
         });
+    });
 
+    nms.on('postPublish', (id, StreamPath) => {
+        let email = StreamPath.replace('/live/', '');
 
+        users.findOne({"email": email}).populate('userHistory').then((user) => {
+            if(user){
+                user.userHistory.streamHistory.push({
+                    startTime: Date.now(),
+                    endTime: null,
+                    streamId: id
+                });
+                user.userHistory.save();
+            }
+        }).catch(() => {
+            console.log('catched')
+        });
+    });
+
+    nms.on('donePublish', (id) => {
+        userHistory.find().then((userHistories) => {
+            userHistories.forEach((userhistory) => {
+                let streamItem = userhistory.streamHistory.find(i => i.streamId === id);
+                if(streamItem !== null){
+                    streamItem.endTime = Date.now();
+                    userhistory.save();
+                }
+            });
+        }).catch((err) => {
+            console.log(err);
+        });
+    });
+
+    nms.on('postPlay', (id, StreamPath, args) => {
+        let email = args.user;
+        if(email){
+            users.findOne({"email": email}).populate('userHistory').then((user) => {
+                user.userHistory.viewHistory.push({
+                    startTime: Date.now(),
+                    endTime: null,
+                    streamId: id
+                });
+                user.userHistory.save();
+            })
+        }
+    });
+
+    nms.on('donePlay', (id, StreamPath, args) => {
+        let email = args.user;
+        if(email){
+            users.findOne({"email": email}).populate('userHistory').then((user) => {
+                user.userHistory.viewHistory.forEach((viewhistory) => {
+                    if(viewhistory.streamId === id){
+                        viewhistory.endTime = Date.now();
+                        user.userHistory.save();
+                    }
+                })
+            })
+        }
     });
 }
 
