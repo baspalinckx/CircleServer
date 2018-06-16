@@ -11,6 +11,20 @@ const userHistory = require('../model/userHistory');
 
 const generateSignature = require('../signature');
 
+routes.get('/getallusers', function (req, res) {
+    users.find().then((users) => {
+        res.status(200).json({
+            "status": true,
+            "result": users
+        })
+    }).catch((err) => {
+        res.status(200).json({
+            "status": false,
+            "result": err
+        })
+    })
+});
+
 routes.post('/register', function (req, res) {
     let pair = keypair();
     const body = req.body;
