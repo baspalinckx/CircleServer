@@ -194,7 +194,7 @@ routes.post('/rsaencrypt', function (req, res) {
 
 routes.post('/rsalogin', function (req, res) {
    const body = req.body;
-   if(body.email && body.signature && body.transparent){
+   if(body.email && body.signature){
        generateSignature.verifySignature(body.email, body.email, body.signature).then((response) => {
            if(response){
                if(body.transparent === true){
@@ -233,6 +233,10 @@ routes.post('/rsalogin', function (req, res) {
                })
            }
        }).catch((err) => {
+           res.status(200).json({
+               "status": false,
+               "result": "user does not exist"
+           });
            console.log(err)
        })
    }else {
