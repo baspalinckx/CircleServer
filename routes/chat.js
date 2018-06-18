@@ -9,7 +9,6 @@ const socketIO = require('socket.io');
 const io = socketIO(server);
 const port = process.env.PORT || 4000;
 
-var emails = [];
 
 io.on('connection', (socket) => {
     console.log('user joined chat');
@@ -21,13 +20,11 @@ io.on('connection', (socket) => {
 
 
         signature.verifySignature(output.email, output.message, output.signature).then((res) => {
-            console.log(res);
             let name ='';
             let sigOut = '';
             if(res) {
                 users.findOne({"email": output.email}).then((user) => {
                    name = user.firstName;
-                     console.log(name);
 
                     signature.signSignature(output.message).then((sig) => {
                         sigOut = sig;
@@ -49,23 +46,13 @@ io.on('connection', (socket) => {
             }
 
         }).catch((err) => {
-
         });
     });
-
     });
 
 server.listen(port, () => {
 
-
     console.log(`Chat server running fine on: ${port}`);
-    users.find({}).select("email").then((user) => {
-        user.forEach(function (email) {
-            // emails[email._id] = email;
-            emails.push(email.email);
-        });
-            console.log(emails);
-    });
 });
 
 module.exports = routes;
