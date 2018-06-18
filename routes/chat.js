@@ -11,14 +11,14 @@ const port = process.env.PORT || 4000;
 
 var emails = [];
 
-
-
 io.on('connection', (socket) => {
     console.log('user joined chat');
 
     socket.on('new-message', (output) => {
 
         console.log(output);
+        socket.join(output.emailTrans);
+
 
         signature.verifySignature(output.email, output.message, output.signature).then((res) => {
             console.log(res);
@@ -34,13 +34,13 @@ io.on('connection', (socket) => {
                         console.log(sig);
 
                         let emit ={
-                            email: output.email,
+                            // email: output.email,
                             name: name,
                             message: output.message,
                             signature: sigOut
                         };
                         console.log(emit);
-                         io.emit ('new-message', emit);
+                         io.to(output.emailTrans).emit('new-message', emit);
                     });
                 });
 
