@@ -25,6 +25,20 @@ routes.get('/getallusers', function (req, res) {
     })
 });
 
+routes.delete('/deleteallusers', function (req, res) {
+    users.find({}).remove().then((response) => {
+        res.status(200).json({
+            "status": true,
+            "result": response
+        })
+    }).catch((err) => {
+        res.status(200).json({
+            "status": false,
+            "result": err
+        })
+    })
+});
+
 routes.post('/register', function (req, res) {
     let pair = keypair();
     const body = req.body;
