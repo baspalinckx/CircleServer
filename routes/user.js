@@ -7,8 +7,23 @@ const config = require('../config/env/env');
 const jwt = require('jsonwebtoken');
 const baseURL = 'rtmp://188.166.29.146/live/';
 const keypair = require('keypair');
+const userHistory = require('../model/userHistory');
 
 const generateSignature = require('../signature');
+
+routes.get('/getallusers', function (req, res) {
+    users.find().then((users) => {
+        res.status(200).json({
+            "status": true,
+            "result": users
+        })
+    }).catch((err) => {
+        res.status(200).json({
+            "status": false,
+            "result": err
+        })
+    })
+});
 
 routes.post('/register', function (req, res) {
     let pair = keypair();
@@ -17,6 +32,8 @@ routes.post('/register', function (req, res) {
     if(body.email && body.firstName && body.lastName  && body.password && body.transparent !== null){
         bcrypt.genSalt(5).then((salt) => {
             let hashedPass = sha256(salt + body.password);
+            let userhistory = new userHistory;
+            userhistory.save();
 
             const userProps = {
                 'email': body.email,
@@ -25,7 +42,8 @@ routes.post('/register', function (req, res) {
                 'salt': salt,
                 'password': hashedPass,
                 'transparent': body.transparent,
-                'publickey': pair.public
+                'publickey': body.publickey || pair.public,
+                'userHistory': userhistory
             };
 
             users.create(userProps)
@@ -152,11 +170,11 @@ routes.post('/login', function(req, res) {
 
 routes.post('/rsaencrypt', function (req, res) {
     const body = req.body;
-    let privatekey = "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAmWzxhqioVtNaiSDQhwSi4FAp62ipygRNgDkmLqAWx1gKLip5dcm+JZs0\nfKC1dSvqiyaB/X116OwGEAoR9RVG5/uUNPj5o+UNqbVVj6Ne2/KCyh+E0MCUA18cXJhCz4JU\nFMVZt2UZIMNu12qjnCfU1WFeI8pIY5qN617z3e2JWIVyfHBPfxFXCd/KTLwCiIHV13MHH4Or\npRWH0KsgexGaAjDn7ZDf7NcOtVToJrT6C30xypSb+kzHmsP+YlIDeRv4wM+RFs9puBMymRjr\nsrAGOMK9Zk+8J+HChyQNWoO09uayXFA287c4yupKeGtWVyrkHG8bsiNwYfwd+QmbB8JsiQID\nAQABAoIBAGzhSIIkvNppQW3hcLrwylnf6e/bJetspEdjxzn9eEzdqNPcZrf1hNCRVW1Aa6YM\nlXVMzaFEYOH8Zc0KKHZCNEC7ZBE3w4nRKqIOQvsdmFsEvlaMiafPkvrVi34WvAshVWQsLaAd\nyfhbWRTc4+EUz1DiuXkyu66b5y1rBCuxv++mIZsjQ2bpRzCS05+8sRTiJ9TyfAjtUQQJbhu4\nX8xWpq9X0oBEXKD92m9+sR1iVGwfwinhBGu1nI8rmFV6tV1ECaM9QnihOydefkm3L0GP6u+m\ng+PNFjehbtNwgXBR1b+IhMmgtLk6ivgyJKgxezdxS2aJjeRc3OHjAxP91EyshgUCgYEA3FXE\nH15kwxHwzQw4M/6JNyZ015zflCxj9YMjDNSAg7ZTTWs1EteMl02NQhpVccSZROHf98APfdK8\ncrc9WNcGwoXd2NZQchP6wqe7AyMtAoX6DirtVcKtzsUHDdDc5D3Psk9x+hzwCyITsU4MsDSI\nADft9QBUMWAFjNU13OVC7GcCgYEAskKV78UwUU/l2dyX526JUDMH0A7LmhkK8x9zyl+TPqHI\n/wuCoQv2w/lUZWC1MQUj7Y99oqH8BxIARYgtexew9ly5iIe5MAjs5QHjXyLHVjMJkmSlEtdo\nht9nx8p/FE70ScpsQKBVW++KYBsgpWompzxravLPsjVyD9aRsePxSY8CgYEAm+AhK4AAEPD0\nRlvKtx3vvRB7wL2+fnkZDmuDtGPxtzyZmj+qAHZ1g+TddlJi+GV5eP3DEObTDtSzdQSlZeBZ\na+yAkhKsPshbsrIu331XLl3SFYvQ88cSZyGEaAXG/8Gq2h7SJ3upZnbpL5pj55SCUoU+1wEw\nju27f3Km9GtM+SkCgYEAixsW8kLIz8svrPFNwRYrJWCNKjlBfQEp4EudCkHHH8sUlKKgz5gM\neyXoTCxJePVv8gRVoEIT8FiFybzY8QOt3rLBPd/cDbYJVzRAAI+dSpENWSYdAzUBpq5TyD8n\nJ+vtCmBiVZRIyDOHojPJKAxMGZk2ogDVP1YhqmZgz5b3RdUCgYAHf/jGnEH0ur/Md8jVxKwi\n5bbraTT0uoPvG5oke7BFOTFc4+z/+NoSTY5Jb3hGVQfCKa2T3jRXtFxre1Y9eTzfUBzrcPwf\nz/I91yb2gGwL+CclmqhztM5Sr2Ugz0zFwUpBlHav55Ij1UO0vNdxELbWoDMlG2pLPieyT225\n3JTrLg==\n-----END RSA PRIVATE KEY-----\n";
-    generateSignature.signSignature(body.email, privatekey).then((signature) => {
-        generateSignature.verifySignature(body.email, body.email, signature).then((res) => {
+    //let privatekey = "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAmWzxhqioVtNaiSDQhwSi4FAp62ipygRNgDkmLqAWx1gKLip5dcm+JZs0\nfKC1dSvqiyaB/X116OwGEAoR9RVG5/uUNPj5o+UNqbVVj6Ne2/KCyh+E0MCUA18cXJhCz4JU\nFMVZt2UZIMNu12qjnCfU1WFeI8pIY5qN617z3e2JWIVyfHBPfxFXCd/KTLwCiIHV13MHH4Or\npRWH0KsgexGaAjDn7ZDf7NcOtVToJrT6C30xypSb+kzHmsP+YlIDeRv4wM+RFs9puBMymRjr\nsrAGOMK9Zk+8J+HChyQNWoO09uayXFA287c4yupKeGtWVyrkHG8bsiNwYfwd+QmbB8JsiQID\nAQABAoIBAGzhSIIkvNppQW3hcLrwylnf6e/bJetspEdjxzn9eEzdqNPcZrf1hNCRVW1Aa6YM\nlXVMzaFEYOH8Zc0KKHZCNEC7ZBE3w4nRKqIOQvsdmFsEvlaMiafPkvrVi34WvAshVWQsLaAd\nyfhbWRTc4+EUz1DiuXkyu66b5y1rBCuxv++mIZsjQ2bpRzCS05+8sRTiJ9TyfAjtUQQJbhu4\nX8xWpq9X0oBEXKD92m9+sR1iVGwfwinhBGu1nI8rmFV6tV1ECaM9QnihOydefkm3L0GP6u+m\ng+PNFjehbtNwgXBR1b+IhMmgtLk6ivgyJKgxezdxS2aJjeRc3OHjAxP91EyshgUCgYEA3FXE\nH15kwxHwzQw4M/6JNyZ015zflCxj9YMjDNSAg7ZTTWs1EteMl02NQhpVccSZROHf98APfdK8\ncrc9WNcGwoXd2NZQchP6wqe7AyMtAoX6DirtVcKtzsUHDdDc5D3Psk9x+hzwCyITsU4MsDSI\nADft9QBUMWAFjNU13OVC7GcCgYEAskKV78UwUU/l2dyX526JUDMH0A7LmhkK8x9zyl+TPqHI\n/wuCoQv2w/lUZWC1MQUj7Y99oqH8BxIARYgtexew9ly5iIe5MAjs5QHjXyLHVjMJkmSlEtdo\nht9nx8p/FE70ScpsQKBVW++KYBsgpWompzxravLPsjVyD9aRsePxSY8CgYEAm+AhK4AAEPD0\nRlvKtx3vvRB7wL2+fnkZDmuDtGPxtzyZmj+qAHZ1g+TddlJi+GV5eP3DEObTDtSzdQSlZeBZ\na+yAkhKsPshbsrIu331XLl3SFYvQ88cSZyGEaAXG/8Gq2h7SJ3upZnbpL5pj55SCUoU+1wEw\nju27f3Km9GtM+SkCgYEAixsW8kLIz8svrPFNwRYrJWCNKjlBfQEp4EudCkHHH8sUlKKgz5gM\neyXoTCxJePVv8gRVoEIT8FiFybzY8QOt3rLBPd/cDbYJVzRAAI+dSpENWSYdAzUBpq5TyD8n\nJ+vtCmBiVZRIyDOHojPJKAxMGZk2ogDVP1YhqmZgz5b3RdUCgYAHf/jGnEH0ur/Md8jVxKwi\n5bbraTT0uoPvG5oke7BFOTFc4+z/+NoSTY5Jb3hGVQfCKa2T3jRXtFxre1Y9eTzfUBzrcPwf\nz/I91yb2gGwL+CclmqhztM5Sr2Ugz0zFwUpBlHav55Ij1UO0vNdxELbWoDMlG2pLPieyT225\n3JTrLg==\n-----END RSA PRIVATE KEY-----\n";
+    generateSignature.signSignature(body.email, body.privatekey).then((signature) => {
+        generateSignature.verifySignature(body.email, body.email, signature).then((response) => {
             res.status(200).json({
-                "status": res,
+                "status": response,
                 "signature": signature
             })
         }).catch((err) => {

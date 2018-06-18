@@ -29,6 +29,10 @@ const UserSchema = new Schema({
     publickey:{
         type: String,
         required: true
+    },
+    userHistory:{
+        type: Schema.Types.ObjectId,
+        ref: 'userhistory'
     }
 });
 
