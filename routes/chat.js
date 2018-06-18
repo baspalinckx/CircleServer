@@ -9,6 +9,9 @@ const socketIO = require('socket.io');
 const io = socketIO(server);
 const port = process.env.PORT || 4000;
 
+var emails = [];
+
+
 
 io.on('connection', (socket) => {
     console.log('user joined chat');
@@ -37,7 +40,7 @@ io.on('connection', (socket) => {
                             signature: sigOut
                         };
                         console.log(emit);
-                         io.emit('new-message', emit);
+                         io.emit ('new-message', emit);
                     });
                 });
 
@@ -53,7 +56,16 @@ io.on('connection', (socket) => {
     });
 
 server.listen(port, () => {
+
+
     console.log(`Chat server running fine on: ${port}`);
+    users.find({}).select("email").then((user) => {
+        user.forEach(function (email) {
+            // emails[email._id] = email;
+            emails.push(email.email);
+        });
+            console.log(emails);
+    });
 });
 
 module.exports = routes;
