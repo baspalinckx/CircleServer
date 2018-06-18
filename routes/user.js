@@ -261,5 +261,4 @@ routes.post('/rsalogin', function (req, res) {
    }
 });
 
-
 module.exports = routes;

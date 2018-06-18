@@ -60,7 +60,7 @@ function startMediaServer() {
         userHistory.find().then((userHistories) => {
             userHistories.forEach((userhistory) => {
                 let streamItem = userhistory.streamHistory.find(i => i.streamId === id);
-                if(streamItem !== null){
+                if(streamItem){
                     streamItem.endTime = Date.now();
                     userhistory.save();
                 }
