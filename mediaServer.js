@@ -12,31 +12,31 @@ function startMediaServer() {
         let email = StreamPath.replace('/live/', '');
         let session = nms.getSession(id);
 
-        users.findOne({"email": email}).then((user) => {
-            if(!user){
-                //session.reject();
-            }
-            else {
-                if (user.transparent) {
-                    if (args.signature) {
-                        Signature.verifySignature(email, email, args.signature).then((res) => {
-                            if (!res) {
-                                session.reject();
-                            }
-                        }).catch(() => {
-                            session.reject();
-                        })
-                    }
-                    else {
-                        //session.reject();
-                    }
-                } else {
-                    session.reject();
-                }
-            }
-        }).catch(() => {
-             session.reject();
-        });
+        // users.findOne({"email": email}).then((user) => {
+        //     if(!user){
+        //         //session.reject();
+        //     }
+        //     else {
+        //         if (user.transparent) {
+        //             if (args.signature) {
+        //                 Signature.verifySignature(email, email, args.signature).then((res) => {
+        //                     if (!res) {
+        //                         session.reject();
+        //                     }
+        //                 }).catch(() => {
+        //                     session.reject();
+        //                 })
+        //             }
+        //             else {
+        //                 //session.reject();
+        //             }
+        //         } else {
+        //             session.reject();
+        //         }
+        //     }
+        // }).catch(() => {
+        //      session.reject();
+        // });
     });
 
     nms.on('postPublish', (id, StreamPath) => {
@@ -60,7 +60,7 @@ function startMediaServer() {
         userHistory.find().then((userHistories) => {
             userHistories.forEach((userhistory) => {
                 let streamItem = userhistory.streamHistory.find(i => i.streamId === id);
-                if(streamItem !== null){
+                if(streamItem){
                     streamItem.endTime = Date.now();
                     userhistory.save();
                 }
