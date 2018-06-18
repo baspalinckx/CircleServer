@@ -30,11 +30,13 @@ routes.get('/list', function (req, res) {
                         if(user) {
                             streamList.push({
                                 "name": user.firstName + ' ' + user.lastName,
+                                "email": email,
                                 "source": baseURL + name + "/index.m3u8"
                             })
                         }else {
                             streamList.push({
                                 "name": name,
+                                "email": email,
                                 "source": baseURL + name + "/index.m3u8"
                             })
                         }
