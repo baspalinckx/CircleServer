@@ -8,7 +8,7 @@ const users = require('../model/users');
 const socketIO = require('socket.io');
 const io = socketIO(server);
 const port = process.env.PORT || 4000;
-
+const userHistory = require('../model/userHistory');
 
 io.on('connection', (socket) => {
     console.log('user joined chat');
@@ -23,8 +23,14 @@ io.on('connection', (socket) => {
             let name ='';
             let sigOut = '';
             if(res) {
-                users.findOne({"email": output.email}).then((user) => {
+                users.findOne({"email": output.email}).populate('userHistory').then((user) => {
                    name = user.firstName;
+                   user.userHistory.chatHistory.push({
+                       date: Date.now(),
+                       message: output.message,
+                       room: output.emailTrans
+                   });
+                   user.userHistory.save();
 
                     signature.signSignature(output.message).then((sig) => {
                         sigOut = sig;
