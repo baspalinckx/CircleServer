@@ -37,7 +37,6 @@ io.on('connection', (socket) => {
                             message: output.message,
                             signature: sigOut
                         };
-                        console.log(emit);
                          io.to(output.emailTrans).emit('new-message', emit);
                     });
                 });
