@@ -12,31 +12,31 @@ function startMediaServer() {
         let email = StreamPath.replace('/live/', '');
         let session = nms.getSession(id);
 
-        // users.findOne({"email": email}).then((user) => {
-        //     if(!user){
-        //         //session.reject();
-        //     }
-        //     else {
-        //         if (user.transparent) {
-        //             if (args.signature) {
-        //                 Signature.verifySignature(email, email, args.signature).then((res) => {
-        //                     if (!res) {
-        //                         session.reject();
-        //                     }
-        //                 }).catch(() => {
-        //                     session.reject();
-        //                 })
-        //             }
-        //             else {
-        //                 //session.reject();
-        //             }
-        //         } else {
-        //             session.reject();
-        //         }
-        //     }
-        // }).catch(() => {
-        //      session.reject();
-        // });
+        users.findOne({"email": email}).then((user) => {
+            if(!user){
+                //session.reject();
+            }
+            else {
+                if (user.transparent) {
+                    if (args.signature) {
+                        Signature.verifySignature(email, email, args.signature).then((res) => {
+                            if (!res) {
+                                session.reject();
+                            }
+                        }).catch(() => {
+                            session.reject();
+                        })
+                    }
+                    else {
+                        //session.reject();
+                    }
+                } else {
+                    session.reject();
+                }
+            }
+        }).catch(() => {
+             //session.reject();
+        });
     });
 
     nms.on('postPublish', (id, StreamPath) => {
@@ -72,6 +72,7 @@ function startMediaServer() {
 
     nms.on('postPlay', (id, StreamPath, args) => {
         let email = args.user;
+        console.log(args);
         if(email){
             users.findOne({"email": email}).populate('userHistory').then((user) => {
                 user.userHistory.viewHistory.push({

@@ -13,7 +13,7 @@ const ffmpegSrc = process.platform=== 'win32'?
     './config/ffmpeg';
 
 const configStream = {
-    logType: 3,
+    logType: 2,
     rtmp: {
         port: 1935,
         chunk_size: 60000,

@@ -14,10 +14,7 @@ io.on('connection', (socket) => {
     console.log('user joined chat');
 
     socket.on('new-message', (output) => {
-
-        console.log(output);
         socket.join(output.emailTrans);
-
 
         signature.verifySignature(output.email, output.message, output.signature).then((res) => {
             let name ='';
@@ -34,8 +31,6 @@ io.on('connection', (socket) => {
 
                     signature.signSignature(output.message).then((sig) => {
                         sigOut = sig;
-                        console.log(sig);
-
                         let emit ={
                             // email: output.email,
                             name: name,
@@ -57,7 +52,6 @@ io.on('connection', (socket) => {
     });
 
 server.listen(port, () => {
-
     console.log(`Chat server running fine on: ${port}`);
 });
 
