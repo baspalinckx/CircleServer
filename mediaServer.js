@@ -72,7 +72,6 @@ function startMediaServer() {
 
     nms.on('postPlay', (id, StreamPath, args) => {
         let email = args.user;
-        console.log(StreamPath + ' '+ args);
         if(email){
             users.findOne({"email": email}).populate('userHistory').then((user) => {
                 user.userHistory.viewHistory.push({
