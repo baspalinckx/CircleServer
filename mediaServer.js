@@ -104,7 +104,7 @@ function startMediaServer() {
 //         users.findOne({"email": email}).populate('userHistory').then((user) => {
 //             let lastStream = user.userHistory.streamHistory[user.streamHistory.length() -1];
 //             if(lastStream.id === id){
-//                 user.satoshi = user.satoshi + multiplyer;
+//                 user.satoshi = user.satoshi + muliplyer
 //             }
 //         })
 //     }, 60 * 60 * 1000)
