@@ -16,7 +16,7 @@ const configStream = {
     logType: 2,
     rtmp: {
         port: 1935,
-        chunk_size: 1000,
+        chunk_size: 20000,
         gop_cache: true,
         ping: 60,
         ping_timeout: 30
@@ -37,7 +37,7 @@ const configStream = {
                 app: 'live',
                 ac: 'aac',
                 hls: true,
-                hlsFlags: '[hls_time=1:hls_list_size=1:hls_flags=delete_segments]',
+                hlsFlags: '[hls_time=1:hls_list_size=2:hls_flags=delete_segments]',
                 /*dash: true,
                 dashFlags: '[f=dash:window_size=3:extra_window_size=5]',*/
                 /*mp4: true,

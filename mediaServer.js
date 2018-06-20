@@ -50,6 +50,7 @@ function startMediaServer() {
                     streamId: id
                 });
                 user.userHistory.save();
+                //calculateProfit(id, 1, email);
             }
         }).catch(() => {
             console.log('catched')
@@ -99,15 +100,19 @@ function startMediaServer() {
     });
 }
 
-// function calculateProfit(id, multiplyer = 1, email){
+// function calculateProfit(id, multiplyer, email){
+//     console.log("hier");
 //     setTimeout(() => {
 //         users.findOne({"email": email}).populate('userHistory').then((user) => {
-//             let lastStream = user.userHistory.streamHistory[user.streamHistory.length() -1];
+//             let lastStream = user.userHistory.streamHistory.pop();
 //             if(lastStream.id === id){
-//                 user.satoshi = user.satoshi + muliplyer
+//                 user.satoshi = user.satoshi + muliplyer;
+//                 user.save();
+//                 console.log(user.satoshi);
+//                 calculateProfit(id, multiplyer * 2, email);
 //             }
 //         })
-//     }, 60 * 60 * 1000)
+//     }, 60 * 1000)
 // }
 
 module.exports = {
