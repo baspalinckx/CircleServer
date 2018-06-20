@@ -18,6 +18,7 @@ io.on('connection', (socket) => {
         socket.join(output.emailTrans);
 
         signature.verifySignature(output.email, output.message, output.signature).then((res) => {
+            console.log(res);
             let name ='';
             let sigOut = '';
             if(res) {
