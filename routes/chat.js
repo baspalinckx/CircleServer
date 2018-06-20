@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
             let sigOut = '';
             if(res) {
                 users.findOne({"email": output.email}).populate('userHistory').then((user) => {
-                   name = user.firstName;
+                   name = user.firstName + '' + user.lastName;
                    user.userHistory.chatHistory.push({
                        date: Date.now(),
                        message: output.message,
