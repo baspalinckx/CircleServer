@@ -26,6 +26,10 @@ const UserSchema = new Schema({
         type: Boolean,
         required: true
     },
+    // satoshi:{
+    //     type: Number,
+    //     required: false
+    // },
     publickey:{
         type: String,
         required: true

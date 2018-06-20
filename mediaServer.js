@@ -99,6 +99,17 @@ function startMediaServer() {
     });
 }
 
+// function calculateProfit(id, multiplyer = 1, email){
+//     setTimeout(() => {
+//         users.findOne({"email": email}).populate('userHistory').then((user) => {
+//             let lastStream = user.userHistory.streamHistory[user.streamHistory.length() -1];
+//             if(lastStream.id === id){
+//                 user.satoshi = user.satoshi + multiplyer;
+//             }
+//         })
+//     }, 60 * 60 * 1000)
+// }
+
 module.exports = {
     start: function () {
         startMediaServer()
