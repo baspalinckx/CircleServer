@@ -101,18 +101,20 @@ function startMediaServer() {
 }
 
 function calculateProfit(id, multiplyer, email){
-    setTimeout(() => {
+    setInterval(() => {
         users.findOne({"email": email}).populate('userHistory').then((user) => {
             let lastStream = user.userHistory.streamHistory.pop();
             if(lastStream.streamId === id && lastStream.endTime === null){
-                if(user.satoshi){
+                if(user.satoshi !== null){
                     user.satoshi = user.satoshi + multiplyer;
                     user.save();
                     calculateProfit(id, multiplyer * 2, email);
+                }else {
+                    console.log(user.firstName + user.lastName + ' heeft geen satoshi')
                 }
             }
         })
-    }, 5 * 60 * 1000)
+    }, 30 * 60 * 1000)
 }
 
 module.exports = {
