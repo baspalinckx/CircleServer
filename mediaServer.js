@@ -14,7 +14,7 @@ function startMediaServer() {
 
         users.findOne({"email": email}).then((user) => {
             if(!user){
-                //session.reject();
+                session.reject();
             }
             else {
                 if (user.transparent) {
@@ -35,7 +35,7 @@ function startMediaServer() {
                 }
             }
         }).catch(() => {
-             //session.reject();
+             session.reject();
         });
     });
 
@@ -50,7 +50,7 @@ function startMediaServer() {
                     streamId: id
                 });
                 user.userHistory.save();
-                //calculateProfit(id, 1, email);
+                calculateProfit(id, 1, email);
             }
         }).catch(() => {
             console.log('catched')
@@ -100,20 +100,20 @@ function startMediaServer() {
     });
 }
 
-// function calculateProfit(id, multiplyer, email){
-//     console.log("hier");
-//     setTimeout(() => {
-//         users.findOne({"email": email}).populate('userHistory').then((user) => {
-//             let lastStream = user.userHistory.streamHistory.pop();
-//             if(lastStream.id === id){
-//                 user.satoshi = user.satoshi + muliplyer;
-//                 user.save();
-//                 console.log(user.satoshi);
-//                 calculateProfit(id, multiplyer * 2, email);
-//             }
-//         })
-//     }, 60 * 1000)
-// }
+function calculateProfit(id, multiplyer, email){
+    setTimeout(() => {
+        users.findOne({"email": email}).populate('userHistory').then((user) => {
+            let lastStream = user.userHistory.streamHistory.pop();
+            if(lastStream.streamId === id && lastStream.endTime === null){
+                if(user.satoshi){
+                    user.satoshi = user.satoshi + multiplyer;
+                    user.save();
+                    calculateProfit(id, multiplyer * 2, email);
+                }
+            }
+        })
+    }, 5 * 60 * 1000)
+}
 
 module.exports = {
     start: function () {
