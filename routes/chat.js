@@ -48,6 +48,32 @@ io.on('connection', (socket) => {
         }).catch((err) => {
         });
     });
+
+    socket.on('streamer-message', (output) => {
+        console.log(output);
+        socket.join(output.emailTrans);
+
+        users.findOne({"email": output.email}).populate('userHistory').then((user) => {
+            let name = user.firstName + ' ' + user.lastName;
+            user.userHistory.chatHistory.push({
+                date: Date.now(),
+                message: output.message,
+                room: output.emailTrans
+            });
+            user.userHistory.save();
+
+            signature.signSignature(output.message).then((sig) => {
+                sigOut = sig;
+                let emit ={
+                    // email: output.email,
+                    name: name,
+                    message: output.message,
+                    signature: sigOut
+                };
+                io.to(output.emailTrans).emit('new-message', emit);
+            });
+        });
+    });
     });
 
 server.listen(port, () => {
