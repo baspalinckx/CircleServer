@@ -4,7 +4,7 @@ let env = {
     dbPort: process.env.DB_PORT || '',
     dbUser: process.env.DB_USER || '',
     dbPassword: process.env.DB_PASSWORD || '',
-    dbDatabase: process.env.DB_DATABASE || 'user',
+    dbDatabase: process.env.DB_DATABASE || 'truyouuser',
     secret: process.env.SECRET || 'YouHaveFailedThisCity'
 };
 
@@ -13,7 +13,7 @@ const ffmpegSrc = process.platform=== 'win32'?
     './config/ffmpeg';
 
 const configStream = {
-    logType: 3,
+    logType: 2,
     rtmp: {
         port: 1935,
         chunk_size: 60000,
@@ -34,15 +34,14 @@ const configStream = {
         ffmpeg: ffmpegSrc,
         tasks: [
             {
-               /* port: 5000,*/
                 app: 'live',
                 ac: 'aac',
                 hls: true,
-                hlsFlags: '[hls_time=2:hls_list_size=5:hls_flags=delete_segments]',
+                hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
                 /*dash: true,
                 dashFlags: '[f=dash:window_size=3:extra_window_size=5]',*/
-                /*mp4: true,
-                mp4Flags: '[movflags=faststart]'*/
+                mp4: true,
+                mp4Flags: '[movflags=faststart]'
             }
         ]
     }
