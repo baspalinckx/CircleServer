@@ -25,6 +25,18 @@ const UserSchema = new Schema({
     transparent:{
         type: Boolean,
         required: true
+    },
+    satoshi:{
+        type: Number,
+        required: false
+    },
+    publickey:{
+        type: String,
+        required: true
+    },
+    userHistory:{
+        type: Schema.Types.ObjectId,
+        ref: 'userhistory'
     }
 });
 
