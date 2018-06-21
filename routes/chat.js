@@ -14,9 +14,11 @@ io.on('connection', (socket) => {
     console.log('user joined chat');
 
     socket.on('new-message', (output) => {
+        console.log(output);
         socket.join(output.emailTrans);
 
         signature.verifySignature(output.email, output.message, output.signature).then((res) => {
+            console.log(res);
             let name ='';
             let sigOut = '';
             if(res) {

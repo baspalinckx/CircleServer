@@ -12,7 +12,7 @@ const userHistory = require('../model/userHistory');
 const generateSignature = require('../signature');
 
 routes.get('/getallusers', function (req, res) {
-    users.find().then((users) => {
+    users.find({}).then((users) => {
         res.status(200).json({
             "status": true,
             "result": users
@@ -54,6 +54,7 @@ routes.post('/register', function (req, res) {
                 'firstName': body.firstName,
                 'lastName': body.lastName,
                 'salt': salt,
+                'satoshi': 0,
                 'password': hashedPass,
                 'transparent': body.transparent,
                 'publickey': body.publickey || pair.public,

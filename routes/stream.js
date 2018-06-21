@@ -65,17 +65,33 @@ routes.get('/list', function (req, res) {
         })
 });
 
-routes.get('/stats/:streamid', function (req, res) {
-    const streamid = req.params.streamid;
+routes.post('/satoshi', function (req, res) {
+    const email = req.body.email;
+
+    users.findOne({"email": email}).then((user) => {
+        console.log(user);
+        res.status(200).json({
+            "status": true,
+            "result": user.satoshi
+        })
+    }).catch(() => {
+        res.status(200).json({
+            "status": false,
+            "result": false
+        })
+    })
+});
+
+routes.post('/stats', function (req, res) {
+    const email = req.body.email;
 
     request(options)
         .then((response) => {
-            let stats = response.live[streamid];
+            let stats = response.live[email];
             if(stats){
-                let viewerscount = stats.subscribers.length;
                 res.status(200).json({
                     "status": true,
-                    "result": viewerscount
+                    "result": stats.subscribers.length
                 })
             }
             else {
